@@ -12,6 +12,14 @@
 #include <unistd.h>
 #endif
 
+#ifdef DEBUG
+    #ifndef DEBUG_PRINT
+        #define DEBUG_PRINT(...) printf(__VA_ARGS__)
+    #endif
+#else
+    #define DEBUG_PRINT(...) do {} while (0)
+#endif
+
 //Messaging Variables
 int messageReference = 1;
 static uint8_t jsprRxBuffer [RX_BUFFER_SIZE];
@@ -27,7 +35,7 @@ int sendJspr(const char *buffer, size_t length)
 #ifdef DEBUG
         char * terminator = strpbrk(buffer, "\r");
         *terminator = '\0';
-        printf("SENT: %s\r\n", buffer);
+        DEBUG_PRINT("SENT: %s\r\n", buffer);
 #endif
         return bytesWritten;
 }
@@ -73,9 +81,7 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
 
             if(validResponse == true)
             {
-#ifdef DEBUG
-            printf("RECEIVED: %s\r\n", jsprRxBuffer);
-#endif
+                DEBUG_PRINT("RECEIVED: %s\r\n", jsprRxBuffer);
                 if (pos >= JSPR_MIN_RESPONSE)
                 {
                     // Strip unwanted characters at the start, this can happen with bootInfo message
