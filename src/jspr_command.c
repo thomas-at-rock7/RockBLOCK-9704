@@ -413,5 +413,3 @@ bool jsprGetErrorLog(void)
     }
     return rVal;
 }
-
-}
