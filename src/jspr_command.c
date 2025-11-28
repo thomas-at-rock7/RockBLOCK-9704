@@ -13,6 +13,7 @@ static uint8_t jsprCommandBuffer [COMMAND_MAX_LEN];
 #define JSPR_GET_SIGNAL_LEN 26U
 #define JSPR_GET_MESSAGE_PROVISIONING_LEN 27U
 #define JSPR_GET_HW_INFO_LEN 14U
+#define JSPR_GET_ERROR_INFO_LEN 16U
 #define JSPR_PUT_FIRMWARE_LEN 17U
 #define JSPR_BOOT_SOURCE_STR_LEN 9U
 #define JSPR_GET_FIRMWARE_LEN 16U
@@ -397,4 +398,20 @@ bool jsprPutServiceConfig(const bool resync)
         }
     }
     return rVal;
+}
+
+bool jsprGetErrorLog(void)
+{
+    bool rVal = false;
+    const char getErrorLogStr[JSPR_GET_ERROR_INFO_LEN] = "GET errorLog {}\r";
+    if (context.serialWrite != NULL)
+    {
+        if(sendJspr(getErrorLogStr, JSPR_GET_ERROR_INFO_LEN) == JSPR_GET_ERROR_INFO_LEN)
+        {
+            rVal = true;
+        }
+    }
+    return rVal;
+}
+
 }

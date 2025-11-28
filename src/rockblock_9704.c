@@ -887,6 +887,12 @@ int8_t rbGetSignal(void)
     return signal;
 }
 
+void rbGetErrorLog (void)
+{
+    jsprGetErrorLog();
+    waitForJsprMessage(&response, "errorLog", JSPR_RC_NO_ERROR, 1);
+}
+
 static bool getHwInfo(jsprHwInfo_t * hwInfo)
 {
     bool populated = false;

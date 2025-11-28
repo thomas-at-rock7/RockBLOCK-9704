@@ -341,6 +341,8 @@ void rbPoll(void);
  */
 int8_t rbGetSignal(void);
 
+void rbGetErrorLog (void);
+
 /**
  * @brief Get the hardware version.
  * 
