@@ -55,6 +55,12 @@ void rbRegisterCallbacks(const rbCallbacks_t *callbacks)
     if (callbacks) 
     {
         rbCallbacks = callbacks;
+#ifdef DEBUG
+        if (rbCallbacks->jsprDebug != NULL)
+        {
+            registerJsprDebugCallback(rbCallbacks->jsprDebug);
+        }
+#endif
     }
 }
 

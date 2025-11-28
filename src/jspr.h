@@ -285,6 +285,11 @@ typedef struct
     char iccid[JSPR_ICCID_MAX_LENGTH];
 } jsprSimStatus_t;
 
+#ifdef DEBUG
+typedef void (*jsprDebugCallback_t)(const char * jsprString);
+void registerJsprDebugCallback(jsprDebugCallback_t cb);
+#endif
+
 //internal functions
 int sendJspr(const char * buffer, size_t length);
 bool receiveJspr(jsprResponse_t * response, const char * expectedTarget);

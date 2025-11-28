@@ -12,18 +12,20 @@
 #include <unistd.h>
 #endif
 
-#ifdef DEBUG
-    #ifndef DEBUG_PRINT
-        #define DEBUG_PRINT(...) printf(__VA_ARGS__)
-    #endif
-#else
-    #define DEBUG_PRINT(...) do {} while (0)
-#endif
 
 //Messaging Variables
 int messageReference = 1;
 static uint8_t jsprRxBuffer [RX_BUFFER_SIZE];
 extern serialContext context;
+
+#ifdef DEBUG
+jsprDebugCallback_t jsprDebugCb = NULL;
+
+void registerJsprDebugCallback(jsprDebugCallback_t cb)
+{
+    jsprDebugCb = cb;
+}
+#endif
 
 int sendJspr(const char *buffer, size_t length)
 {
@@ -35,7 +37,15 @@ int sendJspr(const char *buffer, size_t length)
 #ifdef DEBUG
         char * terminator = strpbrk(buffer, "\r");
         *terminator = '\0';
-        DEBUG_PRINT("SENT: %s\r\n", buffer);
+
+        if (jsprDebugCb != NULL)
+        {
+            jsprDebugCb(buffer);
+        }
+        else
+        {
+            printf("SENT: %s\r\n", buffer);
+        }
 #endif
         return bytesWritten;
 }
@@ -81,7 +91,16 @@ bool receiveJspr(jsprResponse_t * response, const char * expectedTarget)
 
             if(validResponse == true)
             {
-                DEBUG_PRINT("RECEIVED: %s\r\n", jsprRxBuffer);
+#ifdef DEBUG
+                if (jsprDebugCb != NULL)
+                {
+                    jsprDebugCb(jsprRxBuffer);
+                }
+                else
+                {
+                    printf("RECEIVED: %s\r\n", jsprRxBuffer);
+                }
+#endif
                 if (pos >= JSPR_MIN_RESPONSE)
                 {
                     // Strip unwanted characters at the start, this can happen with bootInfo message

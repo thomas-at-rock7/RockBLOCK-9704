@@ -79,6 +79,15 @@ typedef struct
      * @param state Pointer to the updated constellation state structure.
      */
     void (*constellationState)(const jsprConstellationState_t *state);
+
+#ifdef DEBUG
+    /**
+     * @brief Callback for to allow logging of JSPR Strings to and from the modem
+     * 
+     * @param jsprString raw JSPR message string.
+     */
+    jsprDebugCallback_t jsprDebug;
+#endif
 } rbCallbacks_t;
 
 /**
